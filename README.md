@@ -1,36 +1,37 @@
 # Chess API
 Takes the gamestate of a chess match in the following format:
 
-{'board': [],
+{'board': 'wR.wN.wB.wQ.wK.wB.wN.wR,wP.wP.wP.wP.wP.wP.wP.wP,...',
 'colors_turn': 'white',
 'castleability': [],
 'bot_level': 3}
 
-and returns a move.
+and returns a move, where board is each of the rows delimited by a ',' and each square delimited by a '.'.
+See below for visual aid as an array.
 
 #### Board format
 ##### Starting format
 [
-['wR', 'wN', 'wB', 'wK', 'wQ', 'wB', 'wN', 'wR],
+['wR', 'wN', 'wB', 'wK', 'wQ', 'wB', 'wN', 'wR'],
 ['wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP', 'wP'],
 ['--', '--', '--', '--', '--', '--', '--', '--'],
 ['--', '--', '--', '--', '--', '--', '--', '--'],
 ['--', '--', '--', '--', '--', '--', '--', '--'],
 ['--', '--', '--', '--', '--', '--', '--', '--'],
 ['bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP', 'bP'],
-['bR', 'bN', 'bB', 'bK', 'bQ', 'bB', 'bN', 'bR]
+['bR', 'bN', 'bB', 'bK', 'bQ', 'bB', 'bN', 'bR']
 ]
 ##### En Passant flag
 If a pawn has the ability to capture via en passant, append an 'e' to the end of the piece's string followed by the direction
 [
-['wR', 'wN', 'wB', 'wK', 'wQ', 'wB', 'wN', 'wR],
+['wR', 'wN', 'wB', 'wK', 'wQ', 'wB', 'wN', 'wR'],
 ['wP', 'wP', 'wP', '--', 'wP', 'wP', 'wP', 'wP'],
 ['--', '--', '--', '--', '--', '--', '--', '--'],
 ['--', '--', '--', '--', '--', '--', '--', '--'],
 ['--', '--', '--', 'wPe+', 'bP', '--', '--', '--'],
 ['--', 'bP', '--', '--', '--', '--', '--', '--'],
 ['bP', '--', 'bP', 'bP', '--', 'bP', 'bP', 'bP'],
-['bR', 'bN', 'bB', 'bK', 'bQ', 'bB', 'bN', 'bR]
+['bR', 'bN', 'bB', 'bK', 'bQ', 'bB', 'bN', 'bR']
 ]
 
 

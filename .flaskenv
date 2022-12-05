@@ -1,0 +1,4 @@
+FLASK_APP=wsgi
+FLASK_DEBUG=true
+FLASK_RUN_PORT=3000
+APP_TO_LOAD=chess_api
