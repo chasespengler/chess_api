@@ -1,25 +1,37 @@
 # Take move object and returns move in chess notation
 def chess_notation(move):
-    piece = move.get_piece_moved()
+    piece = move.piece_moved
+    cols = ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a']
+    #Piece declaration
     move_string = piece[1] if piece[1] != 'P' and not move.is_castle else ''
+    #Pawn capture
+    if piece[1] == 'P' and move.end_piece[1] != '-':
+        move_string += cols[move.start[1]]
+    #Removing ambiguity
     move_string += need_clarification(move)
+    #Capture
     if move.end_piece != '--':
         move_string += 'x'
-    if not move_string.is_castle:
-        cols = ['h', 'g', 'f', 'e', 'd', 'c', 'b', 'a']
+    #Ending position
+    if not move.is_castle:
         move_string += cols[move.end[1]]
-        move_string += move.end[0] + 1
-    if move.is_castle:
+        move_string += str(move.end[0] + 1)
+    #Castle
+    else:
         if move.castle_type[1] == 'K':
             move_string = 'O-O'
         else:
             move_string = 'O-O-O'
+    #Check ('+')
     if move.is_check:
         move_string += '+'
+    #Checkmate ('++')
     if move.is_checkmate:
         move_string += '+'
+    #En Passant (' e.p.')
     if move.is_en_passant:
         move_string += ' e.p.'
+    #Pawn promotion
     elif move.is_promotion:
         move_string += '=' + move.piece_promoted
 
@@ -30,7 +42,7 @@ def chess_notation(move):
 # rooks on a1 and h8 can both move to d8 so the notation must be Rad8
 def need_clarification(move):
     board =  move.board
-    piece = move.get_piece_moved()
+    piece = move.piece_moved
     end_position = move.end
     other_positions = []
 

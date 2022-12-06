@@ -12,6 +12,4 @@ class move():
         self.is_checkmate = is_checkmate
         self.is_promotion = is_promotion
         self.piece_promoted = piece_promoted
-
-    def get_piece_moved(self):
-        return self.board[self.start[0]][self.start[1]]
+        self.piece_moved = board[start[0]][start[1]]

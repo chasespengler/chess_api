@@ -3,7 +3,7 @@ Takes the gamestate of a chess match in the following format:
 
 {'board': 'wR.wN.wB.wQ.wK.wB.wN.wR,wP.wP.wP.wP.wP.wP.wP.wP,'--'.'--'...,
 'colors_turn': 'white',
-'castleability': [],
+'castleability': 'wKs,wQs,bKs,bQs',
 'bot_level': 3}
 
 and returns a move, where board is each of the rows delimited by a ',' and each square delimited by a '.'.

@@ -10,7 +10,7 @@ def get_move():
     r_board = request.args.get('board')
     board=[]
     colors_turn = request.args.get('colors_turn')
-    castleability = request.args.get('castleability')
+    castleability = request.args.get('castleability').split(',')
     bot_level = int(request.args.get('bot_level'))
     r_board = r_board.split(',')
     for row in r_board:
@@ -18,13 +18,18 @@ def get_move():
 
     bot = bots.get_bot_move(bot_level)
     moves = []
+    new_moves = piece_moves.add_castles(colors_turn, castleability, board)
+    if new_moves:
+        moves.extend(new_moves)
 
     for r, row in enumerate(board):
         for c, piece in enumerate(row):
             if piece[0] == colors_turn[0]:
-                moves.append(piece_moves.get_moves(r, c, board))
+                new_moves = piece_moves.get_moves(r, c, colors_turn[0], board)
+                if new_moves:
+                    moves.extend(new_moves)
 
     move = bot(moves, board)
     algebraic_notation_move = chess_notation(move)
 
-    return jsonify(success=True, move=algebraic_notation_move)
+    return jsonify(success=True, board=board, move=algebraic_notation_move)
