@@ -20,15 +20,5 @@ def make_move(board, move):
     return new_board
 
 # Takes a board and a move and then returns a board after undoing the move
-def undo_move(board, move):
-    new_board = board
-    piece_moved = board[move.end[0]][move.end[1]]
-    if move.is_en_passant:
-        pass
-    elif move.is_castle:
-        pass
-    else:
-        new_board[move.start[0]][move.start[1]] = piece_moved
-        new_board[move.end[0]][move.end[1]] = move.end_piece
-
-    return new_board
+def undo_move(move):
+    return move.board

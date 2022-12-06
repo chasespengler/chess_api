@@ -6,5 +6,5 @@ def get_bot_move(num):
     return bots[num]
 
 #Level 1 bot
-def get_level_1_move(moves):
+def get_level_1_move(moves, board):
     return moves[random.randint(0, len(moves)-1)]

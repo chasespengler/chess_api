@@ -1,7 +1,7 @@
 # Chess API
 Takes the gamestate of a chess match in the following format:
 
-{'board': 'wR.wN.wB.wQ.wK.wB.wN.wR,wP.wP.wP.wP.wP.wP.wP.wP,...',
+{'board': 'wR.wN.wB.wQ.wK.wB.wN.wR,wP.wP.wP.wP.wP.wP.wP.wP,'--'.'--'...,
 'colors_turn': 'white',
 'castleability': [],
 'bot_level': 3}
