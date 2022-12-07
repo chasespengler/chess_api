@@ -4,7 +4,7 @@ class move():
         self.start = start
         self.end = end
         self.end_piece = end_piece
-        self.board = board
+        self.board = board #unnecessary, should refactor at somepoint
         self.is_castle = is_castle
         self.castle_type = castle_type
         self.is_en_passant = is_en_passant

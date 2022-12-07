@@ -204,5 +204,38 @@ def own_check_moves(color, board, move):
     new_board = make_move(board, move)
     if under_attack(kings_location[0], kings_location[1], color, new_board):
         return True
-
     return False
+
+#Checks for moves resulting in opposing king being in check
+def is_check_move(color, board, move):
+    opp_color = 'b' if color == 'w' else 'w'
+    for r, row in enumerate(board):
+        if opp_color + 'K' in row:
+            kings_location = (r, row.index(opp_color+'K'))
+            break
+
+    new_board = make_move(board, move)
+    if under_attack(kings_location[0], kings_location[1], color, new_board):
+        return True
+    return False
+
+#Checks for moves resulting in checkmate
+def is_checkmate_move(color, board, move):
+    opp_color = 'b' if color == 'w' else 'w'
+    for r, row in enumerate(board):
+        if opp_color + 'K' in row:
+            kings_location = (r, row.index(opp_color+'K'))
+            break
+
+    new_board = make_move(board, move)
+    moves = []
+    for r, row in enumerate(new_board):
+        for c, piece in enumerate(row):
+            if piece[0] == opp_color:
+                new_moves = get_moves(r, c, opp_color, board)
+                if new_moves:
+                    moves.extend(new_moves)
+
+    if moves:
+        return False
+    return True
