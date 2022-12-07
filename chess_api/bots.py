@@ -4,7 +4,7 @@ from .board_dynamics import make_move, undo_move
 from .piece_moves import under_attack, get_board_moves
 
 def get_bot_move(num):
-    bots = [get_level_1_move, get_level_1_move, get_level_2_move]
+    bots = [get_level_1_move, get_level_1_move, get_level_2_move, get_level_3_move]
     return bots[num]
 
 #Level 1 bot

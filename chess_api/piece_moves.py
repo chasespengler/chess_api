@@ -44,9 +44,9 @@ def under_attack(row, col, color, board):
                     return True
                 elif v > 4 and (new_sq[1] == 'Q' or new_sq[1] == 'B'):
                     return True
-                elif color == 'w' and 4 < v < 7 and i == 1 and new_sq[1] == 'P':
+                elif color == 'w' and 3 < v < 6 and i == 1 and new_sq[1] == 'P':
                     return True
-                elif color == 'b' and 6 < v and i == 1 and new_sq[1] == 'P':
+                elif color == 'b' and 5 < v and i == 1 and new_sq[1] == 'P':
                     return True
 
     for vector in knight_vectors:
@@ -74,10 +74,6 @@ def allowed(row, col, color, board):
 def get_pawn_moves(row, col, color, board):
     direction = {'w': 1, 'b': -1}
     moves = []
-    # print('!'*100)
-    # print(row, col)
-    # print(row + direction[color])
-    # print('!'*100)
     if board[row + direction[color]][col] == '--':
         move = models.move((row, col), (row + direction[color], col), board[row + direction[color]][col], board)
         if not own_check_moves(color, board, move):
@@ -86,11 +82,11 @@ def get_pawn_moves(row, col, color, board):
         move = models.move((row, col), (row + direction[color]*2, col), board[row + direction[color]*2][col], board)
         if not own_check_moves(color, board, move):
             moves.append(checks_and_checkmate(color, board, move))
-    if (col != 7 and board[row + direction[color]][col + 1][0] != color):
+    if (col != 7 and board[row + direction[color]][col + 1][0] != color and board[row + direction[color]][col + 1][0] != '-'):
         move = models.move((row, col), (row + direction[color], col + 1), board[row + direction[color]][col + 1], board)
         if not own_check_moves(color, board, move):
             moves.append(checks_and_checkmate(color, board, move))
-    if (col != 0 and board[row + direction[color]][col - 1][0] != color):
+    if (col != 0 and board[row + direction[color]][col - 1][0] != color and board[row + direction[color]][col - 1][0] != '-'):
         move = models.move((row, col), (row + direction[color], col - 1), board[row + direction[color]][col - 1], board)
         if not own_check_moves(color, board, move):
             moves.append(checks_and_checkmate(color, board, move))
@@ -124,7 +120,7 @@ def get_rook_moves(row, col, color, board):
     for vector in vectors:
         for i in range(1, 8):
             new_row = row + i*vector[0]
-            new_col = row + i*vector[1]
+            new_col = col + i*vector[1]
             if not allowed(new_row, new_col, color, board):
                 break
             elif own_check_moves(color, board, models.move((row, col), (new_row, new_col), board[new_row][new_col], board)):
@@ -143,7 +139,7 @@ def get_bishop_moves(row, col, color, board):
     for vector in vectors:
         for i in range(1, 8):
             new_row = row + i*vector[0]
-            new_col = row + i*vector[1]
+            new_col = col + i*vector[1]
             if not allowed(new_row, new_col, color, board):
                 break
             elif own_check_moves(color, board, models.move((row, col), (new_row, new_col), board[new_row][new_col], board)):
@@ -243,18 +239,13 @@ def is_check_move(color, board, move):
             break
 
     new_board = make_move(board, move)
-    if under_attack(kings_location[0], kings_location[1], color, new_board):
+    if under_attack(kings_location[0], kings_location[1], opp_color, new_board):
         return True
     return False
 
 #Checks for moves resulting in checkmate
 def is_checkmate_move(color, board, move):
     opp_color = 'b' if color == 'w' else 'w'
-    for r, row in enumerate(board):
-        if opp_color + 'K' in row:
-            kings_location = (r, row.index(opp_color+'K'))
-            break
-
     new_board = make_move(board, move)
     moves = get_board_moves(new_board, opp_color)
 
