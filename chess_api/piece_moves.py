@@ -2,7 +2,19 @@ from . import models
 from . import board_dynamics
 make_move = board_dynamics.make_move
 
-#Gets all moves
+#Gets moves given board and color
+def get_board_moves(board, color):
+    moves = []
+    for r, row in enumerate(board):
+        for c, piece in enumerate(row):
+            if piece[0] == color:
+                new_moves = get_moves(r, c, color, board)
+                if new_moves:
+                    moves.extend(new_moves)
+
+    return moves
+
+#Gets all moves of a given square
 def get_moves(row, col, color, board):
     move_dict = {'P': get_pawn_moves, 'R': get_rook_moves, 'N': get_knight_moves, 'B': get_bishop_moves, 'Q': get_queen_moves, 'K': get_king_moves}
     piece = board[row][col]
@@ -244,13 +256,7 @@ def is_checkmate_move(color, board, move):
             break
 
     new_board = make_move(board, move)
-    moves = []
-    for r, row in enumerate(new_board):
-        for c, piece in enumerate(row):
-            if piece[0] == opp_color:
-                new_moves = get_moves(r, c, opp_color, board)
-                if new_moves:
-                    moves.extend(new_moves)
+    moves = get_board_moves(new_board, opp_color)
 
     if moves:
         return False

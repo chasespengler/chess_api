@@ -17,17 +17,10 @@ def get_move():
         board.append(row.split('.'))
 
     bot = bots.get_bot_move(bot_level)
-    moves = []
+    moves = piece_moves.get_board_moves(board, colors_turn[0])
     new_moves = piece_moves.add_castles(colors_turn, castleability, board)
     if new_moves:
         moves.extend(new_moves)
-
-    for r, row in enumerate(board):
-        for c, piece in enumerate(row):
-            if piece[0] == colors_turn[0]:
-                new_moves = piece_moves.get_moves(r, c, colors_turn[0], board)
-                if new_moves:
-                    moves.extend(new_moves)
 
     move = bot(moves, board)
     algebraic_notation_move = chess_notation(move)
