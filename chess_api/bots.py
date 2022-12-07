@@ -1,6 +1,7 @@
 # Chess bots
 import random
 from .board_dynamics import make_move, undo_move
+from .piece_moves import under_attack
 
 def get_bot_move(num):
     bots = [get_level_1_move, get_level_1_move, get_level_2_move]
@@ -19,7 +20,7 @@ def get_level_2_move(moves, board):
         if move.is_checkmate:
             return move
         if move.is_promotion:
-            max_take = 9
+            max_take = 6
             opt_move = move
         piece_taken = move.end_piece
         if piece_taken == '--':

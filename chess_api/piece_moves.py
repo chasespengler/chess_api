@@ -69,19 +69,19 @@ def get_pawn_moves(row, col, color, board):
     if board[row + direction[color]][col] == '--':
         move = models.move((row, col), (row + direction[color], col), board[row + direction[color]][col], board)
         if not own_check_moves(color, board, move):
-            moves.append(move)
+            moves.append(checks_and_checkmate(color, board, move))
     if ((row == 1 and color == 'w') or (row == 6 and color == 'b')) and board[row + direction[color]*2][col] == '--':
         move = models.move((row, col), (row + direction[color]*2, col), board[row + direction[color]*2][col], board)
         if not own_check_moves(color, board, move):
-            moves.append(move)
+            moves.append(checks_and_checkmate(color, board, move))
     if (col != 7 and board[row + direction[color]][col + 1][0] != color):
         move = models.move((row, col), (row + direction[color], col + 1), board[row + direction[color]][col + 1], board)
         if not own_check_moves(color, board, move):
-            moves.append(move)
+            moves.append(checks_and_checkmate(color, board, move))
     if (col != 0 and board[row + direction[color]][col - 1][0] != color):
         move = models.move((row, col), (row + direction[color], col - 1), board[row + direction[color]][col - 1], board)
         if not own_check_moves(color, board, move):
-            moves.append(move)
+            moves.append(checks_and_checkmate(color, board, move))
     
     if moves:
         return moves
@@ -100,7 +100,8 @@ def get_knight_moves(row, col, color, board):
         elif own_check_moves(color, board, models.move((row, col), (new_row, new_col), board[new_row][new_col], board)):
             return
         else:
-            moves.append(models.move((row, col), (new_row, new_col), board[new_row][new_col], board))
+            move = models.move((row, col), (new_row, new_col), board[new_row][new_col], board)
+            moves.append(checks_and_checkmate(color, board, move))
 
     return moves
 
@@ -117,7 +118,8 @@ def get_rook_moves(row, col, color, board):
             elif own_check_moves(color, board, models.move((row, col), (new_row, new_col), board[new_row][new_col], board)):
                 continue
             else:
-                moves.append(models.move((row, col), (new_row, new_col), board[new_row][new_col], board))
+                move = models.move((row, col), (new_row, new_col), board[new_row][new_col], board)
+                moves.append(checks_and_checkmate(color, board, move))
     if moves:
         return moves
     return
@@ -135,7 +137,8 @@ def get_bishop_moves(row, col, color, board):
             elif own_check_moves(color, board, models.move((row, col), (new_row, new_col), board[new_row][new_col], board)):
                 continue           
             else:
-                moves.append(models.move((row, col), (new_row, new_col), board[new_row][new_col], board))
+                move = models.move((row, col), (new_row, new_col), board[new_row][new_col], board)
+                moves.append(checks_and_checkmate(color, board, move))
     
     return moves
 
@@ -175,20 +178,24 @@ def add_castles(color, castleability, board):
         if 'wQs' in castleability:
             if board[0][4] == '--' and board[0][5] == '--' and board[0][5] == '--':
                 if not under_attack(0, 4, 'w', board) and not under_attack(0, 5, 'w', board) and not under_attack(0, 6, 'w', board):
-                    moves.append(models.move((0, 3), (0, 5), '--', board, is_castle=True, castle_type='wQs'))
+                    move = models.move((0, 3), (0, 5), '--', board, is_castle=True, castle_type='wQs')
+                    moves.append(checks_and_checkmate(color, board, move))
         if 'wKs' in castleability:
             if board[0][2] == '--' and board[0][1] == '--':
                 if not under_attack(0, 2, 'w', board) and not under_attack(0, 1, 'w', board):
-                    moves.append(models.move((0, 3), (0, 1), '--', board, is_castle=True, castle_type='wKs'))
+                    move = models.move((0, 3), (0, 1), '--', board, is_castle=True, castle_type='wKs')
+                    moves.append(checks_and_checkmate(color, board, move))
     else:
         if 'bQs' in castleability:
             if board[7][4] == '--' and board[7][5] == '--' and board[7][6] == '--':
                 if not under_attack(7, 4, 'b', board) and not under_attack(7, 5, 'b', board) and not under_attack(7, 6, 'b', board):
-                    moves.append(models.move((7, 3), (7, 5), '--', board, is_castle=True, castle_type='bQs'))
+                    move = models.move((7, 3), (7, 5), '--', board, is_castle=True, castle_type='bQs')
+                    moves.append(color, board, move)
         if 'bKs' in castleability:
             if board[7][2] == '--' and board[7][1] == '--':
                 if not under_attack(7, 2, 'b', board) and not under_attack(7, 1, 'b', board):
-                    moves.append(models.move((7, 3), (7, 1), '--', board, is_castle=True, castle_type='bKs'))
+                    move = models.move((7, 3), (7, 1), '--', board, is_castle=True, castle_type='bKs')
+                    moves.append(color, board, move)
 
     if moves:
         return moves
@@ -205,6 +212,15 @@ def own_check_moves(color, board, move):
     if under_attack(kings_location[0], kings_location[1], color, new_board):
         return True
     return False
+
+#Checks for checks and checkmate moves
+def checks_and_checkmate(color, board, move):
+    if is_check_move(color, board, move):
+        move.is_check = True
+        if is_checkmate_move(color, board, move):
+            move.is_checkmate = True
+
+    return move
 
 #Checks for moves resulting in opposing king being in check
 def is_check_move(color, board, move):
