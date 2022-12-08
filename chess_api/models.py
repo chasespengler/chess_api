@@ -1,6 +1,6 @@
 
 class move():
-    def __init__(self, start, end, end_piece, board, is_castle=False, castle_type='', is_en_passant=False, is_check=False, is_checkmate=False, is_promotion=False, piece_promoted='Q'):
+    def __init__(self, start, end, end_piece, board, is_castle=False, castle_type='', is_en_passant=False, is_check=False, is_checkmate=False, is_stalemate=False, is_promotion=False, piece_promoted='Q'):
         self.start = start
         self.end = end
         self.end_piece = end_piece

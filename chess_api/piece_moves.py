@@ -227,6 +227,8 @@ def checks_and_checkmate(color, board, move):
         move.is_check = True
         if is_checkmate_move(color, board, move):
             move.is_checkmate = True
+    elif is_checkmate_move(color, board, move):
+        move.is_stalemate = True
 
     return move
 
@@ -243,7 +245,7 @@ def is_check_move(color, board, move):
         return True
     return False
 
-#Checks for moves resulting in checkmate
+#Checks for moves resulting in checkmate or stalemate
 def is_checkmate_move(color, board, move):
     opp_color = 'b' if color == 'w' else 'w'
     new_board = make_move(board, move)

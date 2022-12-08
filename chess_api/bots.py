@@ -57,3 +57,10 @@ def get_level_3_move(moves, board):
             min_max = maximum
 
     return opt_move
+
+#Level 4 bot, min max at increased depth
+def get_level_4_move(moves, board):
+    color = board[moves[0].start[0]][moves[0].start[1]][0]
+    opp_color = 'b' if color == 'w' else 'w'
+    points = {'P': 1, 'R': 5, 'N': 3, 'B': 3, 'Q': 9, '-': 0}
+    min_max = 100
