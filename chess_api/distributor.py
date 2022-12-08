@@ -17,12 +17,12 @@ def get_move():
         board.append(row.split('.'))
 
     bot = bots.get_bot_move(bot_level)
-    moves = piece_moves.get_board_moves(board, colors_turn[0])
+    moves = piece_moves.get_board_moves(board, colors_turn[0], True)
     new_moves = piece_moves.add_castles(colors_turn, castleability, board)
     if new_moves:
         moves.extend(new_moves)
 
-    move = bot(moves, board)
+    move = bot(moves, board, castleability)
     algebraic_notation_move = chess_notation(move)
 
     return jsonify(success=True, board=board, move=algebraic_notation_move)

@@ -3,24 +3,24 @@ from . import board_dynamics
 make_move = board_dynamics.make_move
 
 #Gets moves given board and color
-def get_board_moves(board, color):
+def get_board_moves(board, color, checks):
     moves = []
     for r, row in enumerate(board):
         for c, piece in enumerate(row):
             if piece[0] == color:
-                new_moves = get_moves(r, c, color, board)
+                new_moves = get_moves(r, c, color, board, checks)
                 if new_moves:
                     moves.extend(new_moves)
 
     return moves
 
 #Gets all moves of a given square
-def get_moves(row, col, color, board):
+def get_moves(row, col, color, board, checks):
     move_dict = {'P': get_pawn_moves, 'R': get_rook_moves, 'N': get_knight_moves, 'B': get_bishop_moves, 'Q': get_queen_moves, 'K': get_king_moves}
     piece = board[row][col]
     if piece == '--':
         return
-    moves = move_dict[piece[1]](row, col, color, board)
+    moves = move_dict[piece[1]](row, col, color, board, checks)
     return moves
 
 #Returns boolean value determining if a piece is under attack or not given a color, row, column, and board
@@ -71,25 +71,53 @@ def allowed(row, col, color, board):
     return True
 
 #Returns all moves for a pawn piece given a position and board
-def get_pawn_moves(row, col, color, board):
+def get_pawn_moves(row, col, color, board, checks):
     direction = {'w': 1, 'b': -1}
     moves = []
     if board[row + direction[color]][col] == '--':
         move = models.move((row, col), (row + direction[color], col), board[row + direction[color]][col], board)
         if not own_check_moves(color, board, move):
-            moves.append(checks_and_checkmate(color, board, move))
+            if move.end[0] == 7 and color == 'w':
+                move.is_promotion = True
+            elif move.end[0] == 0 and color == 'b':
+                move.is_promotion = True
+            if checks:
+                moves.append(checks_and_checkmate(color, board, move))
+            else:
+                moves.append(move)
     if ((row == 1 and color == 'w') or (row == 6 and color == 'b')) and board[row + direction[color]*2][col] == '--':
         move = models.move((row, col), (row + direction[color]*2, col), board[row + direction[color]*2][col], board)
         if not own_check_moves(color, board, move):
-            moves.append(checks_and_checkmate(color, board, move))
+            if move.end[0] == 7 and color == 'w':
+                move.is_promotion = True
+            elif move.end[0] == 0 and color == 'b':
+                move.is_promotion = True
+            if checks:
+                moves.append(checks_and_checkmate(color, board, move))
+            else:
+                moves.append(move)
     if (col != 7 and board[row + direction[color]][col + 1][0] != color and board[row + direction[color]][col + 1][0] != '-'):
         move = models.move((row, col), (row + direction[color], col + 1), board[row + direction[color]][col + 1], board)
         if not own_check_moves(color, board, move):
-            moves.append(checks_and_checkmate(color, board, move))
+            if move.end[0] == 7 and color == 'w':
+                move.is_promotion = True
+            elif move.end[0] == 0 and color == 'b':
+                move.is_promotion = True
+            if checks:
+                moves.append(checks_and_checkmate(color, board, move))
+            else:
+                moves.append(move)
     if (col != 0 and board[row + direction[color]][col - 1][0] != color and board[row + direction[color]][col - 1][0] != '-'):
         move = models.move((row, col), (row + direction[color], col - 1), board[row + direction[color]][col - 1], board)
         if not own_check_moves(color, board, move):
-            moves.append(checks_and_checkmate(color, board, move))
+            if move.end[0] == 7 and color == 'w':
+                move.is_promotion = True
+            elif move.end[0] == 0 and color == 'b':
+                move.is_promotion = True
+            if checks:
+                moves.append(checks_and_checkmate(color, board, move))
+            else:
+                moves.append(move)
     
     if moves:
         return moves
@@ -97,7 +125,7 @@ def get_pawn_moves(row, col, color, board):
     
 
 #Returns all moves for a knight piece given a position and board
-def get_knight_moves(row, col, color, board):
+def get_knight_moves(row, col, color, board, checks):
     moves = []
     vectors = [(1, 2), (2, 1), (-1, 2), (-2, 1), (1, -2), (2, -1), (-1, -2), (-2, 1)]
     for vector in vectors:
@@ -109,12 +137,15 @@ def get_knight_moves(row, col, color, board):
             return
         else:
             move = models.move((row, col), (new_row, new_col), board[new_row][new_col], board)
-            moves.append(checks_and_checkmate(color, board, move))
+            if checks:
+                moves.append(checks_and_checkmate(color, board, move))
+            else:
+                moves.append(move)
 
     return moves
 
 #Gets all potential moves for a rook piece given a position and board
-def get_rook_moves(row, col, color, board):
+def get_rook_moves(row, col, color, board, checks):
     moves = []
     vectors = [(1, 0), (0, 1), (-1, 0), (0, -1)]
     for vector in vectors:
@@ -127,13 +158,16 @@ def get_rook_moves(row, col, color, board):
                 continue
             else:
                 move = models.move((row, col), (new_row, new_col), board[new_row][new_col], board)
-                moves.append(checks_and_checkmate(color, board, move))
+                if checks:
+                    moves.append(checks_and_checkmate(color, board, move))
+                else:
+                    moves.append(move)
     if moves:
         return moves
     return
 
 #Gets all potential moves for a bishop piece given a position and board
-def get_bishop_moves(row, col, color, board):
+def get_bishop_moves(row, col, color, board, checks):
     moves = []
     vectors = [(1, 1), (1, -1), (-1, 1), (-1, -1)]
     for vector in vectors:
@@ -146,20 +180,22 @@ def get_bishop_moves(row, col, color, board):
                 continue           
             else:
                 move = models.move((row, col), (new_row, new_col), board[new_row][new_col], board)
-                moves.append(checks_and_checkmate(color, board, move))
+                if checks:
+                    moves.append(checks_and_checkmate(color, board, move))
+                moves.append(move)
     
     return moves
 
 #Gets all potential moves for a queen piece given a position and board
-def get_queen_moves(row, col, color, board):
-    r_moves = get_rook_moves(row, col, color, board)
-    moves = r_moves.extend(get_bishop_moves(row, col, color, board)) if r_moves else get_bishop_moves(row, col, color, board)
+def get_queen_moves(row, col, color, board, checks):
+    r_moves = get_rook_moves(row, col, color, board, checks)
+    moves = r_moves.extend(get_bishop_moves(row, col, color, board, checks)) if r_moves else get_bishop_moves(row, col, color, board, checks)
     if moves:
         return moves
     return
 
 #Gets all potential moves for a king piece given a position and board
-def get_king_moves(row, col, color, board):
+def get_king_moves(row, col, color, board, checks):
     moves = []
     vectors = [(1, 0), (0, 1), (-1, 0), (0, -1), (1, 1), (1, -1), (-1, 1), (-1, -1)]
     for vector in vectors:
@@ -211,12 +247,16 @@ def add_castles(color, castleability, board):
 
 #Checks for moves resulting in own king being in check
 def own_check_moves(color, board, move):
+    kings_location = False
     for r, row in enumerate(board):
         if color + 'K' in row:
             kings_location = (r, row.index(color+'K'))
             break
 
     new_board = make_move(board, move)
+    if not kings_location:
+        for row in new_board:
+            print(row)
     if under_attack(kings_location[0], kings_location[1], color, new_board):
         return True
     return False
@@ -249,7 +289,7 @@ def is_check_move(color, board, move):
 def is_checkmate_move(color, board, move):
     opp_color = 'b' if color == 'w' else 'w'
     new_board = make_move(board, move)
-    moves = get_board_moves(new_board, opp_color)
+    moves = get_board_moves(new_board, opp_color, False)
 
     if moves:
         return False
