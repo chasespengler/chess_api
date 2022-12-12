@@ -13,3 +13,4 @@ class move():
         self.is_promotion = is_promotion
         self.piece_promoted = piece_promoted
         self.piece_moved = board[start[0]][start[1]]
+        self.is_stalemate = is_stalemate
