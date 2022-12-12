@@ -1,1 +1,1 @@
-from . import board_dynamics, bots, piece_moves, utils
+from . import test_board_dynamics, test_bots, test_piece_moves, test_utils

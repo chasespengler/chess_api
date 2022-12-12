@@ -5,12 +5,12 @@ def chess_notation(move):
     #Piece declaration
     move_string = piece[1] if piece[1] != 'P' and not move.is_castle else ''
     #Pawn capture
-    if piece[1] == 'P' and move.end_piece[1] != '-':
+    if piece[1] == 'P' and (move.end_piece[1] != '-' or move.is_en_passant):
         move_string += cols[move.start[1]]
     #Removing ambiguity
     move_string += need_clarification(move)
     #Capture
-    if move.end_piece != '--':
+    if move.end_piece != '--' or move.is_en_passant:
         move_string += 'x'
     #Ending position
     if not move.is_castle:
