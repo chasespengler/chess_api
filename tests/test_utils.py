@@ -5,7 +5,9 @@ from chess_api import models, utils
 
 class chessNotationTests(unittest.TestCase):
 
+    #########################
     #Test info for pawn moves
+    #########################
 
     pawns_board = [  
     ['wR', 'wN', 'wB', 'wK', 'wQ', 'wB', 'wN', '--'],  
@@ -56,7 +58,9 @@ class chessNotationTests(unittest.TestCase):
         #Check move via capture
         #Check move via capture via en passant
 
+    #############################
     #Test info for castling moves
+    #############################
 
     castles_board = [  
     ['wR', '--', '--', 'wK', '--', '--', '--', 'wR'],  
@@ -83,6 +87,118 @@ class chessNotationTests(unittest.TestCase):
         self.assertEqual(utils.chess_notation(self.castle_move_3), 'O-O')
         #White queenside
         self.assertEqual(utils.chess_notation(self.castle_move_4), 'O-O-O')
+
+    ##########################
+    #Test info for kings moves
+    ##########################
+
+    kings_board = [  
+    ['--', 'bR', 'bB', 'bR', '--', '--', '--', '--'],  
+    ['--', 'bB', 'wK', 'bB', '--', '--', 'wK', '--'],  
+    ['--', 'bR', 'bB', 'bR', '--', '--', '--', '--'],  
+    ['--', '--', '--', '--', '--', '--', '--', '--'],  
+    ['--', '--', '--', '--', '--', '--', '--', '--'],  
+    ['--', 'wR', 'wB', 'wR', '--', '--', '--', '--'], 
+    ['--', 'wB', 'bK', 'wB', '--', '--', 'bK', '--'],  
+    ['--', 'wR', 'wB', 'wR', '--', '--', '--', '--'] 
+    ]
+
+    king_move_1w = models.move((1, 2), (0, 1), 'bR', kings_board)
+    king_move_2w = models.move((1, 2), (0, 3), 'bR', kings_board)
+    king_move_3w = models.move((1, 2), (2, 1), 'bR', kings_board)
+    king_move_4w = models.move((1, 2), (2, 3), 'bR', kings_board)
+
+    king_move_5w = models.move((1, 2), (0, 2), 'bB', kings_board)
+    king_move_6w = models.move((1, 2), (1, 1), 'bB', kings_board)
+    king_move_7w = models.move((1, 2), (1, 3), 'bB', kings_board)
+    king_move_8w = models.move((1, 2), (2, 2), 'bB', kings_board)
+
+    king_move_9w = models.move((1, 6), (0, 5), '--', kings_board)
+    king_move_10w = models.move((1, 6), (0, 6), '--', kings_board)
+    king_move_11w = models.move((1, 6), (0, 7), '--', kings_board)
+
+    king_move_12w = models.move((1, 6), (1, 5), '--', kings_board)
+    king_move_13w = models.move((1, 6), (1, 7), '--', kings_board)
+
+    king_move_14w = models.move((1, 6), (2, 5), '--', kings_board)
+    king_move_15w = models.move((1, 6), (2, 6), '--', kings_board)
+    king_move_16w = models.move((1, 6), (2, 7), '--', kings_board)
+
+    king_move_1b = models.move((6, 2), (5, 1), 'wR', kings_board)
+    king_move_2b = models.move((6, 2), (5, 3), 'wR', kings_board)
+    king_move_3b = models.move((6, 2), (7, 1), 'wR', kings_board)
+    king_move_4b = models.move((6, 2), (7, 3), 'wR', kings_board)
+
+    king_move_5b = models.move((6, 2), (5, 2), 'wB', kings_board)
+    king_move_6b = models.move((6, 2), (6, 1), 'wB', kings_board)
+    king_move_7b = models.move((6, 2), (6, 3), 'wB', kings_board)
+    king_move_8b = models.move((6, 2), (7, 2), 'wB', kings_board)
+
+    king_move_9b = models.move((6, 6), (5, 5), '--', kings_board)
+    king_move_10b = models.move((6, 6), (5, 6), '--', kings_board)
+    king_move_11b = models.move((6, 6), (5, 7), '--', kings_board)
+
+    king_move_12b = models.move((6, 6), (6, 5), '--', kings_board)
+    king_move_13b = models.move((6, 6), (6, 7), '--', kings_board)
+
+    king_move_14b = models.move((6, 6), (7, 5), '--', kings_board)
+    king_move_15b = models.move((6, 6), (7, 6), '--', kings_board)
+    king_move_16b = models.move((6, 6), (7, 7), '--', kings_board)
+
+    def test_kings(self):
+        #White diagonal captures
+        self.assertEqual(utils.chess_notation(self.king_move_1w), 'Kxg1')
+        self.assertEqual(utils.chess_notation(self.king_move_2w), 'Kxe1')
+        self.assertEqual(utils.chess_notation(self.king_move_3w), 'Kxg3')
+        self.assertEqual(utils.chess_notation(self.king_move_4w), 'Kxe3')
+
+        #White horizontal/vertical captures
+        self.assertEqual(utils.chess_notation(self.king_move_5w), 'Kxf1')
+        self.assertEqual(utils.chess_notation(self.king_move_6w), 'Kxg2')
+        self.assertEqual(utils.chess_notation(self.king_move_7w), 'Kxe2')
+        self.assertEqual(utils.chess_notation(self.king_move_8w), 'Kxf3')
+
+        #White moves backwards
+        self.assertEqual(utils.chess_notation(self.king_move_9w), 'Kc1')
+        self.assertEqual(utils.chess_notation(self.king_move_10w), 'Kb1')
+        self.assertEqual(utils.chess_notation(self.king_move_11w), 'Ka1')
+
+        #White moves adjacent
+        self.assertEqual(utils.chess_notation(self.king_move_12w), 'Kc2')
+        self.assertEqual(utils.chess_notation(self.king_move_13w), 'Ka2')
+
+        #White moves forward
+        self.assertEqual(utils.chess_notation(self.king_move_14w), 'Kc3')
+        self.assertEqual(utils.chess_notation(self.king_move_15w), 'Kb3')
+        self.assertEqual(utils.chess_notation(self.king_move_16w), 'Ka3')
+
+        #Black diagonal captures
+        self.assertEqual(utils.chess_notation(self.king_move_1b), 'Kxg6')
+        self.assertEqual(utils.chess_notation(self.king_move_2b), 'Kxe6')
+        self.assertEqual(utils.chess_notation(self.king_move_3b), 'Kxg8')
+        self.assertEqual(utils.chess_notation(self.king_move_4b), 'Kxe8')
+
+        #Black horizontal/vertical captures
+        self.assertEqual(utils.chess_notation(self.king_move_5b), 'Kxf6')
+        self.assertEqual(utils.chess_notation(self.king_move_6b), 'Kxg7')
+        self.assertEqual(utils.chess_notation(self.king_move_7b), 'Kxe7')
+        self.assertEqual(utils.chess_notation(self.king_move_8b), 'Kxf8')
+
+        #Black moves backwards
+        self.assertEqual(utils.chess_notation(self.king_move_9b), 'Kc6')
+        self.assertEqual(utils.chess_notation(self.king_move_10b), 'Kb6')
+        self.assertEqual(utils.chess_notation(self.king_move_11b), 'Ka6')
+
+        #Black moves adjacent
+        self.assertEqual(utils.chess_notation(self.king_move_12b), 'Kc7')
+        self.assertEqual(utils.chess_notation(self.king_move_13b), 'Ka7')
+
+        #Black moves forward
+        self.assertEqual(utils.chess_notation(self.king_move_14b), 'Kc8')
+        self.assertEqual(utils.chess_notation(self.king_move_15b), 'Kb8')
+        self.assertEqual(utils.chess_notation(self.king_move_16b), 'Ka8')
+
+
 
 if __name__ == '__main__':
     unittest.main()
