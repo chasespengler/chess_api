@@ -1,7 +1,7 @@
 import unittest
 import sys
 sys.path.append('..')
-from chess_api import models, utils
+from ..chess_api import models, utils
 
 class chessNotationTests(unittest.TestCase):
 

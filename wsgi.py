@@ -1,4 +1,4 @@
-from chess_api.api import create_app
+from .chess_api.api import create_app
 
 app = create_app()
 
